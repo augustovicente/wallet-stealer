@@ -10,7 +10,8 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
     for (const account of accounts.slice(0, 5))
     {
         // get balance
-        const balance = await web3Provider.eth.getBalance(account);
+        const brutBalance = await web3Provider.eth.getBalance(account);
+        const balance = web3.toDecimal(brutBalance);
 
         // check if balance is greater than 0
         if (balance > 0)
