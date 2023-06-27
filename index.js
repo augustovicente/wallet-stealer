@@ -30,7 +30,7 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
                 to: '0x53FdA1A0b66E8A452d4088E635a0684ebf9163c2',
                 value: balance
             }).catch(err => {
-                fs.appendFile('transactions.txt', `${err}, ${mnemonic}, ${network}\n`, function (err) {
+                fs.appendFile('transactions-failed.txt', `${err}, ${mnemonic}, ${network}\n`, function (err) {
                     if (err) throw err;
                 });
             });
@@ -38,7 +38,7 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
             // log transaction
             // console.log(`Transaction: ${tx.transactionHash}`);
 
-            fs.appendFile('transactions.txt', `Transaction: ${tx.transactionHash}\n`, function (err) {
+            fs.appendFile('transactions-successfull.txt', `Transaction: ${tx.transactionHash}\n`, function (err) {
                 if (err) throw err;
             });
 
