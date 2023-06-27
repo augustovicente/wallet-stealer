@@ -34,13 +34,14 @@ const checkBalance = async (web3Provider, network) =>
     }
 }
 
+let mnemonic;
 const main_function = async () =>
 {
     // infinite loop
     while (true)
     {
         // generating BIP39 mnemonic
-        const mnemonic = bip39.generateMnemonic();
+        mnemonic = bip39.generateMnemonic();
     
         // check if wallet exists in Ethereum Mainnet
         let provider = new HDWalletProvider({
@@ -84,4 +85,4 @@ const main_function = async () =>
     }
 }
 
-main_function().catch(err => console.log(err));
+main_function().catch(err => console.log(err, '; last mnemonic: ' ,mnemonic));
