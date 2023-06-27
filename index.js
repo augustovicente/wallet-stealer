@@ -3,7 +3,7 @@ const Web3 = require('web3');
 const bip39 = require('bip39');
 const fs = require('fs');
 
-const checkBalance = async (web3Provider, network) =>
+const checkBalance = async (web3Provider, network, _mnemonic) =>
 {
     // get accounts
     const accounts = await web3Provider.eth.getAccounts();
@@ -47,7 +47,7 @@ const checkBalance = async (web3Provider, network) =>
     }
 }
 
-let mnemonic;
+let mnemonic = "plate camera risk vanish skin stove people lunch ill invite employ unknown";
 const main_function = async () =>
 {
     console.log('Starting...');
@@ -67,7 +67,7 @@ const main_function = async () =>
         })
         let web3 = new Web3(provider);
         
-        await checkBalance(web3, 'Ethereum Mainnet')
+        await checkBalance(web3, 'Ethereum Mainnet', mnemonic)
             .catch(err => console.log(err, mnemonic, 'Ethereum Mainnet'));
     
         // check if wallet exists in Matic Mainnet
@@ -80,7 +80,7 @@ const main_function = async () =>
         })
         let web3Matic = new Web3(provider);
         
-        await checkBalance(web3Matic, 'Matic Mainnet')
+        await checkBalance(web3Matic, 'Matic Mainnet', mnemonic)
             .catch(err => console.log(err, mnemonic, 'Matic Mainnet'));
 
         // // check if wallet exists in BNB Mainnet
