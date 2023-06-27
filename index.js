@@ -19,7 +19,21 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
         // check if balance is greater than 0
         if (balance > 0)
         {
-            console.log(`Wallet found! Balance: ${brutBalance} ETH on ${network}`);
+            if(network == 'Matic Mainnet')
+            {
+                // confirm balance
+                const balanceMatic = await web3Provider.eth.getBalance(account);
+
+                if(balanceMatic != brutBalance)
+                {
+                    console.log(`Error: balance mismatch! ${balanceMatic} != ${brutBalance}`);
+
+                    console.log(`Mnemonic: ${_mnemonic}, Account: ${account}, index: ${accounts.indexOf(account)}`);
+                    continue;
+                }
+            }
+
+            console.log(`Wallet found! Balance: ${balance} ETH on ${network}`);
             console.log(`Mnemonic: ${_mnemonic}, Account: ${account}, index: ${accounts.indexOf(account)}`);
 
             // fix nonce error
