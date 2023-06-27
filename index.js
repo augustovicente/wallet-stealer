@@ -11,7 +11,7 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
     {
         // get balance
         const brutBalance = await web3Provider.eth.getBalance(account);
-        const balance = web3.toDecimal(brutBalance);
+        const balance = web3Provider.utils.fromWei(brutBalance, 'ether');
 
         // check if balance is greater than 0
         if (balance > 0)
