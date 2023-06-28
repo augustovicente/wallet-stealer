@@ -31,8 +31,14 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
         return wallets.map((wallet) => wallet.account)
     })
 
+    if(accountsAlreadyChecked.length > 0)
+    {
+        console.log('accountsAlreadyChecked', accountsAlreadyChecked)
+        return;
+    }
+
     // for each account of the 5 first accounts
-    for (const account of accounts.filter((account) => !accountsAlreadyChecked.includes(account)).slice(0, 5))
+    for (const account of accounts.slice(0, 5))
     {
         // get balance
         const brutBalance = await web3Provider.eth.getBalance(account);
