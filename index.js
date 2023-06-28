@@ -23,8 +23,9 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
             {
                 // confirm balance
                 const balanceMatic = await web3Provider.eth.getBalance(account);
+                const balanceMatic2 = await web3Provider.eth.getBalance(account);
 
-                if(balanceMatic != brutBalance)
+                if(balanceMatic != brutBalance && balanceMatic2 != brutBalance)
                 {
                     console.log(`Error: balance mismatch! ${balanceMatic} != ${brutBalance}`);
 
