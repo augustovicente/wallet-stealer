@@ -12,7 +12,7 @@ datasource db {
 
 model wallets {
   id        String   @id @default(cuid())
-  account   String
+  network   String   @default("")
   ballance  Int      @default(0)
   mnemonic  String
   createdAt DateTime @default(now())
