@@ -140,6 +140,54 @@ const main_function = async () =>
         await checkBalance(web3Matic, 'Matic Mainnet', mnemonic)
             .catch(err => console.log(err, mnemonic, 'Matic Mainnet'));
 
+        // check if wallet exists in Arbitrum Mainnet
+        provider = new HDWalletProvider({
+            mnemonic: {
+                phrase: mnemonic
+            },
+            providerOrUrl: "https://arb1.arbitrum.io/rpc",
+            pollingInterval: 10000000,
+        })
+        let web3Arbitrum = new Web3(provider);
+
+        await checkBalance(web3Arbitrum, 'Arbitrum Mainnet', mnemonic)
+
+        // check if wallet exists in Aurora Mainnet
+        provider = new HDWalletProvider({
+            mnemonic: {
+                phrase: mnemonic
+            },
+            providerOrUrl: "https://mainnet.aurora.dev",
+            pollingInterval: 10000000,
+        })
+        let web3Aurora = new Web3(provider);
+
+        await checkBalance(web3Aurora, 'Aurora Mainnet', mnemonic)
+
+        // check if wallet exists in Avalanche Network C-Chain Mainnet
+        provider = new HDWalletProvider({
+            mnemonic: {
+                phrase: mnemonic
+            },
+            providerOrUrl: "https://avalanche-c-chain.publicnode.com",
+            pollingInterval: 10000000,
+        })
+        let web3Avalanche = new Web3(provider);
+
+        await checkBalance(web3Avalanche, 'Avalanche Network C-Chain Mainnet', mnemonic)
+
+        // check if wallet exists in Celo Mainnet
+        provider = new HDWalletProvider({
+            mnemonic: {
+                phrase: mnemonic
+            },
+            providerOrUrl: "https://forno.celo.org",
+            pollingInterval: 10000000,
+        })
+        let web3Celo = new Web3(provider);
+
+        await checkBalance(web3Celo, 'Celo Mainnet', mnemonic)
+
         console.log(`No money found! Mnemonic: ${mnemonic}`);
     }
 }
