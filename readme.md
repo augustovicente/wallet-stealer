@@ -6,7 +6,7 @@ Wallet Stealer is a Node.js project designed to scan multiple wallets across dif
 ## Table of Contents
 
 - [Configuration](#configuration)
-- [Getting Started](#getting-started)
+- [Warning](#warning)
 
 ## Configuration
 
